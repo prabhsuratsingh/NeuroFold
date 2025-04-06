@@ -21,6 +21,8 @@ export default function Home() {
   const [searchMode, setSearchMode] = useState<'protein' | 'drug'>('protein');
   const resultsRef = useRef<HTMLDivElement | null>(null);
 
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
   const fetchData = async () => {
     if (!query) return;
     
@@ -46,7 +48,7 @@ export default function Home() {
     try {
       console.log(protein?.primaryAccession)
       console.log(query)
-      const response = await fetch(`http://localhost:8000/predict`, {
+      const response = await fetch(`${apiUrl}/predict`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -69,7 +71,7 @@ export default function Home() {
     try {
       console.log(protein?.primaryAccession)
       console.log(query)
-      const response = await fetch(`http://localhost:8000/discover`, {
+      const response = await fetch(`${apiUrl}/discover`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
