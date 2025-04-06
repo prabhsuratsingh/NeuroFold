@@ -73,7 +73,7 @@ Check out the project overview deck here: [View Presentation (Canva)](https://ww
 
 ## 🌍 Contact
 - Email: prabhsurat.tech@gmail.com
-- Linkedin: [Prabhsurat Singh](www.linkedin.com/in/prabhsurat-singh-1868052ab)
+- Linkedin: [Prabhsurat Singh](https://www.linkedin.com/in/prabhsurat-singh-1868052ab)
 
 
 
