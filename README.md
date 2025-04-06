@@ -63,3 +63,11 @@ Deployed via FastAPI with a frontend powered by Next.js.
 - Serve multiple model versions
 
 ---
+
+## 🌍 Contact
+- Email: prabhsurat.tech@gmail.com
+- Linkedin: [Prabhsurat Singh](www.linkedin.com/in/prabhsurat-singh-1868052ab)
+
+
+
+<p align="center">Made with ❤️ by Prabhsurat Singh</p>
