@@ -1,4 +1,4 @@
-# Drug Discovery Assistant 🔬
+# NeuroFold 🔬
 
 AI-powered platform to predict potential drug candidates for target proteins, powered by PyTorch, FastAPI, and Gemini.
 
