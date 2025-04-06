@@ -64,6 +64,13 @@ Deployed via FastAPI with a frontend powered by Next.js.
 
 ---
 
+## 📽️ Presentation
+
+Check out the project overview deck here: [View Presentation (Canva)](https://www.canva.com/design/DAGjw62AW1E/LHytmVFddrpbi2eiM-nofQ/edit?utm_content=DAGjw62AW1E&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
+
+
+---
+
 ## 🌍 Contact
 - Email: prabhsurat.tech@gmail.com
 - Linkedin: [Prabhsurat Singh](www.linkedin.com/in/prabhsurat-singh-1868052ab)
