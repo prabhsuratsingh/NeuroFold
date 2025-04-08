@@ -104,6 +104,10 @@ class PredictionRequest(BaseModel):
     drug_name: str
 
 
+@app.get("/health")
+def check_health():
+    return {"message": "Good Health"}
+
 @app.post("/predict")
 def predict_interaction(request: PredictionRequest):
     protein_sequence = fetch_protein_sequence(request.uniprot_id)
