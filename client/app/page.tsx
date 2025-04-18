@@ -241,7 +241,7 @@ export default function Home() {
                 </p>
               </div>
             </div>
-            <div>
+            {/* <div>
               <h3 className="text-lg font-semibold mb-2">Heatmap</h3>
               <div className="bg-white rounded-lg p-4 flex items-center justify-center">
                 <img
@@ -249,7 +249,7 @@ export default function Home() {
                   alt="heatmap"
                   className="max-w-full h-auto" />
               </div>
-            </div>
+            </div> */}
             <div>
               {drugDiscoveryResult?.top_similar_drugs.map((drug, i) => (
                 <div key={i} className="border p-4 rounded shadow-md m-2">

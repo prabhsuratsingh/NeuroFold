@@ -14,10 +14,12 @@ from fastapi.middleware.cors import CORSMiddleware
 import seaborn as sns
 import matplotlib.pyplot as plt
 from dotenv import load_dotenv
+
+from new_model import NewDrugTargetModel, encode_protein_protbert, fetch_sequence, smiles_to_fingerprint
 load_dotenv()
 
 from discovery import build_prompt, smiles_to_image_base64
-from model import DrugTargetModel, encode_protein, fetch_drug_smiles, fetch_protein_sequence, smiles_to_fingerprint
+# from model import DrugTargetModel, encode_protein, fetch_drug_smiles, fetch_protein_sequence, smiles_to_fingerprint
 from utils import build_predict_prompt, get_top_similar_drugs
 
 from google import genai 
@@ -27,8 +29,8 @@ ai_client = genai.Client(api_key=api_key)
 
 protein_dim = 400  
 drug_dim = 1024 
-model = DrugTargetModel(protein_dim, drug_dim)
-model.load_state_dict(torch.load("drug_target_model.pth"))
+model = NewDrugTargetModel()
+model.load_state_dict(torch.load("new_drug_target_model.pth"))
 model.eval()
 
 def fetch_drug_info(drug_name):
@@ -88,7 +90,8 @@ def generate_heatmap(protein_grad, drug_grad):
 app = FastAPI()
 
 origins = [
-    "https://neuro-fold.vercel.app"
+    "https://neuro-fold.vercel.app",
+    "http://localhost:3000"
 ]
 
 app.add_middleware(
@@ -110,7 +113,7 @@ def check_health():
 
 @app.post("/predict")
 def predict_interaction(request: PredictionRequest):
-    protein_sequence = fetch_protein_sequence(request.uniprot_id)
+    protein_sequence = fetch_sequence(request.uniprot_id)
     if not protein_sequence:
         return {"error": "Invalid UniProt ID or sequence not found"}
     
@@ -120,11 +123,16 @@ def predict_interaction(request: PredictionRequest):
     
     drug_info["name"] = request.drug_name
     
-    protein_encoded = encode_protein(protein_sequence)
+    # FCNN model endcoding
+    # protein_encoded = encode_protein(protein_sequence)
+    # protein_tensor = torch.tensor([protein_encoded], dtype=torch.float32)
+    protein_embedding = encode_protein_protbert(protein_sequence)
+    protein_tensor = protein_embedding.unsqueeze(0)
+
     drug_encoded = smiles_to_fingerprint(drug_info["smiles"])
+    # drug_tensor = torch.tensor([drug_encoded], dtype=torch.float32)
     
-    protein_tensor = torch.tensor([protein_encoded], dtype=torch.float32)
-    drug_tensor = torch.tensor([drug_encoded], dtype=torch.float32)
+    drug_tensor = drug_encoded.unsqueeze(0)
     
     with torch.no_grad():
         prediction = model(protein_tensor, drug_tensor).item()
@@ -161,12 +169,15 @@ class DiscoveryRequest(BaseModel):
 
 @app.post("/discover")
 def discover_candidates(request: DiscoveryRequest):
-    protein_sequence = fetch_protein_sequence(request.uniprot_id)
+    protein_sequence = fetch_sequence(request.uniprot_id)
     if not protein_sequence:
         return {"error": "Invalid UniProt ID or sequence not found"}
 
-    protein_encoded = encode_protein(protein_sequence)
-    protein_tensor = torch.tensor([protein_encoded], dtype=torch.float32)
+    #FCNN model encoding
+    # protein_encoded = encode_protein(protein_sequence)
+    # protein_tensor = torch.tensor([protein_encoded], dtype=torch.float32)
+    protein_embedding = encode_protein_protbert(protein_sequence)
+    protein_tensor = protein_embedding.unsqueeze(0)
     
     drug_db = pd.read_csv("drug_db.csv")
     results = []
@@ -179,7 +190,8 @@ def discover_candidates(request: DiscoveryRequest):
             continue
 
         drug_fp = smiles_to_fingerprint(smiles)
-        drug_tensor = torch.tensor([drug_fp], dtype=torch.float32)
+        # drug_tensor = torch.tensor([drug_fp], dtype=torch.float32)
+        drug_tensor = drug_fp.unsqueeze(0)
 
         with torch.no_grad():
             score = model(protein_tensor, drug_tensor).item()
